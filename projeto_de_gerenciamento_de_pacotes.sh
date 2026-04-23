@@ -200,6 +200,8 @@ instalacao_de_pacotes(){
 
 atualizar_os_pacotes(){
 
+    while_do_instalador=1	
+
     while [ "$while_do_instalador" = "1" ]; do  
 
 
@@ -512,3 +514,86 @@ funcao_limpeza_no_sistema () {
 
     echo "Processo de limpeza terminado"
 }
+
+echo "Oi, o quê deseja: "
+
+echo
+
+#Nessas perguntas o que o usuario deseja: atualizar, remover, instalar, ver informações e limpar o sistema#
+
+echo "digite 's' para sim e 'n' para não"
+
+echo
+
+while [ "$contador_do_while" = 1 ] #Loop para as perguntas#
+do
+	echo "Atualizar o sistema? s/n"
+
+	read atualizar_o_sistema
+
+	if [ "$atualizar_o_sistema" = "s" ]
+	then
+		atualizar_os_pacotes
+	fi
+
+	echo
+
+	echo "Instalar pacotes? s/n"
+
+	read instalar_pacotes
+
+	if [ "$instalar_pacotes" = "s" ]
+	then
+		instalacao_de_pacotes
+	fi
+
+	echo
+
+	echo "remover pacotes? s/n"
+
+	read remover_pacotes
+
+	if [ "$remover_pacotes" = "s" ]
+	then
+		funcao_remocao_de_pacotes
+	fi
+
+	echo
+
+	echo "ver informações de pacotes? s/n"
+
+	read informacoes_de_pacotes
+
+	if [ "$informacoes_de_pacotes" = "s" ]
+	then
+		funcao_informacao_dos_pacotes
+	fi
+
+	echo
+
+	echo "Limpar o sistema? s/n"
+
+	read limpar_o_sistema
+
+	echo
+
+	if [ "$limpar_o_sistema" = "s" ]
+	then
+		funcao_limpeza_no_sistema
+	fi
+
+	echo
+
+	echo "Deseja refazer as perguntas? s/n"
+
+	read repetir_as_perguntas
+
+	#pergunta para o usuario se quer repetir as perguntas e coloca o valor das váriavel para nada#
+
+	if test "$repetir_as_perguntas" = "n"
+	then
+
+		break
+
+	fi
+done
