@@ -1,518 +1,514 @@
 #! /bin/bash
+
 #######################################################################################################################################
-# Gerenciador de pacotes automatizado(com menu interativo): atualiza, instala, remove, limpa o cache dos pacotes não utilizado e mons- 
-# tra informações:
+# Gerenciador de pacotes automatizado (com menu interativo): atualiza, instala, remove, limpa o cache dos pacotes não utilizados e mostra informações:
 #######################################################################################################################################
 
-contador_do_while=1 #Vai permite que o loop aconteçar para as perguntas para executar os processos de pacotes#
+contador_do_while=1
 
-contador_dos_processo=0 #Vai realizar cada processo que for adicionado para essa váriavel#
 
-funcao_informacao_dos_pacotes() {  # Declaração da função de informações
 
-    	
-    contador_do_while_informacoes=1  #Serve para iniciar o loop da informações#
+funcao_informacao_dos_pacotes() {
 
-    echo "Digite qual pacote deseja verificar as informações:"  # Pergunta ao usuário
-		
+    contador_do_while_informacoes=1  
 
-    read pacote_ver_informacoes  # Lê o nome do pacote
+    echo "Digite qual pacote deseja verificar as informações:"  
 
-    while [ "$contador_do_while_informacoes" = "1" ]  # Loop principal
+    read pacote_ver_informacoes  
+
+
+
+    while [ "$contador_do_while_informacoes" = "1" ]
     do
 
-        # Verifica se o pacote existe
         if apt-cache show "$pacote_ver_informacoes" > /dev/null 2>&1
-
         then
 
-            echo "Deseja verificar se o pacote está no sistema? (s/n)"  # Pergunta ao usuário
+            echo "Deseja verificar se o pacote está no sistema? (s/n)"  
 
-            read resposta_se_esta_instalado  # Lê resposta
+            read resposta_se_esta_instalado  
 
-            echo  # Espaço
+            echo  
 
-            # Verifica se usuário quer saber se está instalado
+
+
             if [ "$resposta_se_esta_instalado" = "s" ]
-
             then
 
-                apt-cache policy "$pacote_ver_informacoes" | grep "Instalado:"  # Mostra status
+                apt-cache policy "$pacote_ver_informacoes" | grep "Instalado:"  
 
-                echo  # Espaço
+                echo  
 
             fi
 
-            echo  # Espaço
 
-            echo "Deseja verificar as dependências do pacote? (s/n)"  # Pergunta
 
-            read resposta_dependencia_do_pacote  # Lê resposta
+            echo  
 
-            echo  # Espaço
+            echo "Deseja verificar as dependências do pacote? (s/n)"  
 
-            # Mostra dependências
+            read resposta_dependencia_do_pacote  
+
+            echo  
+
+
+
             if [ "$resposta_dependencia_do_pacote" = "s" ]
-
             then
 
-                apt-cache show "$pacote_ver_informacoes" | grep "Depends:"  # Mostra dependências
+                apt-cache show "$pacote_ver_informacoes" | grep "Depends:"  
 
-                echo  # Espaço
+                echo  
 
             fi
 
-            echo "Deseja ver o tamanho do pacote? (s/n)"  # Pergunta
 
-            read resposta_tamanho_do_pacote  # Lê resposta
 
-            echo  # Espaço
+            echo "Deseja ver o tamanho do pacote? (s/n)"  
 
-            # Mostra tamanho do pacote
+            read resposta_tamanho_do_pacote  
+
+            echo  
+
+
+
             if [ "$resposta_tamanho_do_pacote" = "s" ]
-
             then
 
-                echo "Tamanho no disco:"  # Explicação
+                echo "Tamanho no disco:"  
 
-                apt-cache show "$pacote_ver_informacoes" | grep "Installed-Size:"  # Tamanho instalado
+                apt-cache show "$pacote_ver_informacoes" | grep "Installed-Size:"  
 
-                echo  # Espaço
+                echo  
 
-                echo "Tamanho para download:"  # Explicação
 
-                apt show "$pacote_ver_informacoes" | grep "Download-Size:"  # Tamanho download
 
-                echo  # Espaço
+                echo "Tamanho para download:"  
+
+                apt show "$pacote_ver_informacoes" | grep "Download-Size:"  
+
+                echo  
 
             fi
 
-            echo "Quer fazer novamente as perguntas? (s/n)"  # Pergunta final
 
-            read recomeca  # Lê resposta
 
-            # Se usuário digitar "n", sai do loop
+            echo "Quer fazer novamente as perguntas? (s/n)"  
+
+            read recomeca  
+
+
+
             [ "$recomeca" = "n" ] && break
 
-            echo  # Espaço
 
-            echo "Digite novamente o pacote:"  # Permite novo ciclo
 
-            read pacote_ver_informacoes  # Lê novo pacote
+            echo  
+
+            echo "Digite novamente o pacote:"  
+
+            read pacote_ver_informacoes  
+
+
 
         else
 
-            echo "Erro: nome do pacote inválido. Digite novamente."  # Tratamento de erro
+            echo "Erro: nome do pacote inválido. Digite novamente."  
 
-            read pacote_ver_informacoes  # Lê novamente
+            read pacote_ver_informacoes  
 
         fi
 
-    done  # Fim do while
-
+    done
 }
 
 
-teste_de_pacotes(){ #FUNÇÃO DE INSTALAÇÃO DE PACOTES#
+
+instalacao_de_pacotes(){
+
+    while_do_instalador=1
 
 
 
+    while [ "$while_do_instalador" = "1" ]; do
 
- 	while [ "$while_do_instalador" = "1" ]; do   #Perguntas para iniciar o processo#
- 		echo "Vai quere instalar qual pacote?" #Pergunta para usuario qual pacote instalar#
+        echo "Vai querer instalar qual pacote?"  
 
-        	read pacote_do_usuario  #Váriavel com valor do nome do pacote#
+        read pacote_do_usuario  
 
-		#Vai verificar se usuario escreveu corretamente. E introduzir se esse pacote que está sendo procurado ja existe#
-		if  apt-cache show "$pacote_do_usuario" > /dev/null 2>&1
-		then
-			if dpkg -l "$pacote_do_usuario" | grep ii > /dev/null 2>&1 #Verifica se o pacote já está no sistema, e sair do loop#
-			then
-				echo "Você já possui esse pacote"
 
-				echo
 
-				echo "Vai ser concluida esse processo de instalação"
+        if  apt-cache show "$pacote_do_usuario" > /dev/null 2>&1
+        then
 
-				break
-			fi
+            if dpkg -l "$pacote_do_usuario" | grep ii > /dev/null 2>&1
+            then
 
-			apt-cache show $pacote_do_usuario #Amostra para saida final o pacote#
+                echo "Você já possui esse pacote"
 
-			echo
+                echo
 
-			echo "Esse é pacote que está procurando? (s/n)" #Pergunta se esse é pacote desejado#
+                echo "Esse processo de instalação será concluído"
 
-			read resposta_do_usuario
+                break
 
-			#Executa a instalação ou não, se não volta para o inicio para fazer novamente os comandos anterio#
+            fi
 
-			if [ "$resposta_do_usuario" = "s" ]
 
-			then
-				sudo apt-get install "$pacote_do_usuario" -y
 
-				echo
+            apt-cache show "$pacote_do_usuario"
 
-				echo "Instalação concluida"
+            echo
 
-				break
-			else
-				echo "Digite novamente."
 
-				echo
 
-			fi
+            echo "Esse é o pacote que está procurando? (s/n)"
 
-		else #Monstra erro, como saida, pois, quem escreveu pode ter digitada errado#
-			echo "Erro. Provalvelmente foi erro de digitação"
-		fi
-	done
-	 }
+            read resposta_do_usuario
 
-	
-atualizar_os_pacotes(){ #FUNÇÃO DE ATUALIZAÇÃO 
-	
 
- while [ "$while_do_instalador" = "1" ]; do   #Perguntas para iniciar o processo# 
 
-	if sudo apt-get update -y | grep "Todos os pacotes estão atualizados."# verifica se o sistema está atualizado#
-	then
-		echo "Seu sistema já está totalmente atualizado. Processo de atualização foi terminado" #finaliza o processo#
+            if [ "$resposta_do_usuario" = "s" ]
+            then
 
-		break
-		else
-		echo "Deseja atualizar um pacote especifico? s/n" #Pergunta se usuario quer um pacote especifico para atualizar
-		read atualizar_pacote_especifico
+                sudo apt-get install "$pacote_do_usuario" -y
+
+                echo
+
+                echo "Instalação concluída"
+
+                break
+
+            else
+
+                echo "Digite novamente."
+
+                echo
+
+            fi
+
+        else
+
+            echo "Erro. Provavelmente foi erro de digitação"
+
+        fi
+
+    done
+}
+
+
+
+atualizar_os_pacotes(){
+
+    while [ "$while_do_instalador" = "1" ]; do  
+
+
+
+        if sudo apt-get update -y | grep "Todos os pacotes estão atualizados."
+        then
+
+            echo "Seu sistema já está totalmente atualizado. Processo de atualização finalizado"
+
+            break
+
+        else
+
+            echo "Deseja atualizar um pacote específico? s/n"
+
+            read atualizar_pacote_especifico
+
+            echo
+
+
+
+            if [ "$atualizar_pacote_especifico" = "s" ]
+            then
+
+                echo "Digite o nome do pacote"
+
+                read pacote_especifico
+
+                echo
+
+
+
+                if apt-cache show "$pacote_especifico" > /dev/null 2>&1
+                then
+
+                    sudo apt-get install --only-upgrade"$pacote_especifico"
+
+                    echo
+
+                    echo "Atualização feita com sucesso"
+
+                    echo
+
+
+
+                    echo "Deseja atualizar o sistema? s/n"
+
+                    read sistema_atualizar
+
+
+
+                    if [ "$sistema_atualizar" = "s" ]
+                    then
+
+                        sudo apt update -y && sudo apt-get upgrade -y
 
                         echo
 
-			if [ "$atualizar_pacote_especifico" = "s" ] #verifica se o usuario quer atualizar#
-			then
-				echo "Digite o nome do pacote" #Recebe o pacote especifico#
+                        echo "Atualização do sistema completa. Processo concluído."
 
-				read pacote_especifico
+                        break
 
-				echo
+                    else
 
-				if apt-cache show "$pacote_especifico" > /dev/null 2>&1  #verifica se escreveu certo#
+                        echo "Processo de atualização concluído."
 
-				then
+                        break
 
-					sudo apt-get upgrade -y "$pacote_especifico" #atualiza pacote especifoco
+                    fi
 
-					echo
+                else 
 
-					echo "Atualização feita com sucesso"
+                    echo "Erro... Provavelmente errou a digitação. Digite novamente"
 
-					echo
+                fi
 
-					echo "Deseja atualizar o sistema? s/n" #Recebe se usuario que atualizar o sistema como todo#
+            else
 
-					echo
+                sudo apt update -y && sudo apt upgrade -y
 
-					read sistema_atualizar
-						
-					if [ "$sistema_atualizar" = "s"] #Atualiza o sistema ou termina o processo esse processo#
-					then
-						sudo apt update -y && sudo apt-get upgrade -y #Atualiza o sistema
+                echo
 
-						echo 
+                echo "Sistema atualizado. Processo concluído"
 
-                                                #Termina esse processo#
+                break
 
-						echo "Atualização no sistema completa. Processo de atualização concluida."
+            fi  
 
-						break 
+        fi
 
-					else
-						
-						echo "Processo de atualização concluida. Processo de atualização concluida"
+    done  
+}
 
-                                                  #Termina o processo#
 
-						break
-					fi
-				else 
-	                                   
-					#Avisa o erro para usuario, pois, ele erro nome do pacote#
 
-					echo "Erro... Provavelmente errou a digitaçõa. Digite novamente" 
-				fi
-			else
-				sudo apt update -y && sudo apt upgrade -y #Atualiza o sistem#
-				
-				echo
+funcao_remocao_de_pacotes() {
 
-				echo "Sistema atualizado. Processo de atualização concluida" #Termina esse processo#
+    contador_da_remocao=1
 
-				break
-			fi	
-		fi
-	done	
-	 }
 
-	
- funcao_remocao_de_pacotes() {  # FUNÇÃO DE REMOVERA PACOTES#
 
-	contador_da_remocao=1
+    while [ "$contador_da_remocao" = "1" ]; do  
 
-    while [ "$contador_da_remocao" = "1" ]; do  # Loop que mantém o processo ativo até o usuário sair
+        echo "Digite o pacote que deseja remover:"  
 
-        echo "Digite o pacote que deseja remover:"  # Solicita o nome do pacote
+        read pacote_para_remocao  
 
-	read pacote_para_remocao  # Armazena o nome digitado pelo usuário
+        echo
 
-	echo
 
-        # Verifica se o pacote existe nos repositórios
+
         if apt-cache show "$pacote_para_remocao" > /dev/null 2>&1
         then
 
-            # Verifica se o pacote NÃO está instalado no sistema
             if apt-cache policy "$pacote_para_remocao" | grep "(nenhum)" > /dev/null 2>&1
             then
-                echo
-
-		echo "Você não possui esse pacote no sistema. Deseja encerrar o processo? (s/n)"
-
-		read encerra_processo  # Lê resposta do usuário
-
-                test "$encerra_processo" = "s"  && break  # Se resposta for "s", sai do loop
 
                 echo
 
-		echo "Ok, voltando ao início. Digite novamente."  # Reinicia o processo
+                echo "Você não possui esse pacote no sistema. Deseja encerrar o processo? (s/n)"
 
-		echo
+                read encerra_processo  
 
-            else  # Caso o pacote exista e esteja instalado
 
-                apt-cache show "$pacote_para_remocao"  # Mostra informações do pacote
 
-		echo
+                test "$encerra_processo" = "s"  && break  
 
-                echo "Deseja realmente remover esse pacote? (s/n)"  # Confirma remoção
+                echo
 
-		read remover_pacote
+                echo "Ok, voltando ao início. Digite novamente."
 
-                if [ "$remover_pacote" = "s" ]  # Se usuário confirmar
+                echo
+
+
+
+            else
+
+                apt-cache show "$pacote_para_remocao"
+
+                echo
+
+
+
+                echo "Deseja realmente remover esse pacote? (s/n)"
+
+                read remover_pacote
+
+
+
+                if [ "$remover_pacote" = "s" ]
                 then
-                    sudo apt-get remove "$pacote_para_remocao"  # Remove o pacote
+
+                    sudo apt-get remove "$pacote_para_remocao"
 
                     echo
 
-		    echo "Remoção concluída. Deseja apagar também as configurações desse pacote? (s/n)"
+                    echo "Remoção concluída. Deseja apagar também as configurações desse pacote? (s/n)"
 
-		    read apagar_configuracao  # Pergunta se deseja remover configurações
+                    read apagar_configuracao
 
-		    echo
+                    echo
 
-                    # Se usuário quiser remover configurações
+
+
                     if [ "$apagar_configuracao" = "s" ]
                     then
-                        sudo apt-get purge "$pacote_para_remocao"  # Remove pacote + configurações
 
-			echo "Configurações removidas com sucesso"
+                        sudo apt-get purge "$pacote_para_remocao"
+
+                        echo "Configurações removidas com sucesso"
+
                     fi
 
-                    echo
 
-		    echo "Deseja continuar o processo? (s/n)"  # Pergunta se quer continuar
-
-		    read encerra_processo
-
-                    [ "$encerra_processo" = "n" ] && break  # Se "n", encerra o loop
 
                     echo
 
-		    echo "Ok, o processo continuará."
+                    echo "Deseja continuar o processo? (s/n)"
 
-                else  # Caso o usuário não queira remover
+                    read encerra_processo
+
+
+
+                    [ "$encerra_processo" = "n" ] && break  
+
+
+
                     echo
 
-		    echo "Processo continuará sem remoção."
+                    echo "Ok, o processo continuará."
 
-		    echo
+
+
+                else
+
+                    echo
+
+                    echo "Processo continuará sem remoção."
+
+                    echo
+
                 fi
 
-                echo
 
-		echo "Deseja encerrar o processo? (s/n)"  # Pergunta final
-
-		read encerra_processo
-
-                test "$encerra_processo" = "s" && break  # Se "s", encerra o loop
 
                 echo
 
-		echo "Processo continuará."
+                echo "Deseja encerrar o processo? (s/n)"
 
-	    fi
+                read encerra_processo
 
-        else  # Caso o pacote não exista (erro de digitação)
+
+
+                test "$encerra_processo" = "s" && break  
+
+                echo
+
+                echo "Processo continuará."
+
+            fi
+
+        else
+
             echo
 
-	    echo "Erro: nome do pacote inválido. Digite novamente."
+            echo "Erro: nome do pacote inválido. Digite novamente."
 
-	fi
+        fi
 
-    done  # Fim do loop while
-}
-
-
-funcao_limpeza_no_sistema () {  #FUNÇÃO DE LIMPEZA DO CACHE/SISTEMA 
-
-	echo "Nesse processo vai conter a limpeza do sistema"  
-	
-	echo  
-
-	echo "Deseja realizar a limpeza das dependências não usadas? (s/n)"  
-	
-	read limpezas_das_dependencias  # Armazena a resposta do usuário
-
-	echo
-
-	# Verifica se o usuário quer limpar dependências
-	if [ "$limpezas_das_dependencias" = "s" ]
-	then
-
-		# Simula a limpeza (sem executar) para ver se há algo para remover
-		if sudo apt-get autoremove -n | grep "0 a serem removidos" > /dev/null 2>&1
-		then	
-			echo "Não há nada para limpar. O processo será encerrado"  # Caso não tenha nada
-
-		else
- 			sudo apt-get autoremove  # Remove dependências não usadas
-
-			echo
-			
-			echo "Limpeza de dependências concluída"  # Mensagem de sucesso
-
-		fi
-	fi
-
-	# Pergunta sobre limpeza de pacotes antigos
-	echo "Deseja realizar a limpeza de programas não usados? (s/n)"
-	
-	read limpezas_dos_programas  # Lê resposta
-
-	# Verifica resposta
-	if [ "$limpezas_dos_programas" = "s" ]
-	then
-		sudo apt-get autoclean  # Remove pacotes antigos do cache
-	
-		echo
-		
-		echo "Se nada aconteceu, o sistema não precisava remover pacotes"  # Explicação
- 
-	fi	
-
-	# Pergunta sobre limpeza total do cache
-	echo "Deseja realizar a limpeza do cache? (s/n)"
-	
-	read limpeza_do_cache  # Lê resposta
-
-	# Verifica resposta
-	if [ "$limpeza_do_cache" = "s" ]
-	then
-		sudo apt-get clean  # Remove TODO o cache de pacotes
-
-		echo
-		
-		echo "Limpeza do cache concluída"  # Mensagem final
-		
-		echo
-	fi
-
-	echo "Processo de limpeza terminado"  # Final do script
+    done
 }
 
 
 
-echo "Oi, o quê deseja: "
+funcao_limpeza_no_sistema () {
 
-echo
+    echo "Nesse processo haverá a limpeza do sistema"  
 
-#Nessas perguntas o que o usuario deseja: atualizar, remover, instalar, ver informações e limpar o sistema#
+    echo  
 
-echo "digite 's' para sim e 'n' para não"
+    echo "Deseja realizar a limpeza das dependências não usadas? (s/n)"  
 
-echo
+    read limpezas_das_dependencias  
 
-while [ "$contador_do_while" = 1 ] #Loop para as perguntas#
-do
-	echo "Atualizar o sistema? s/n" 
-
-	read atualizar_o_sistema
-
-	if [ "$atualizar_o_sistema" = "s" ] 
-	then
-		atualizar_os_pacotes
-	fi
-	
-	echo
-	
-	echo "Instalar pacotes? s/n"
-
-	read instalar_pacotes
-	
-	if [ "$instalar_pacotes" = "s" ]
-	then 
-		instalacao_de_pacotes
-	fi
-
-	echo
-	
-	echo "remover pacotes? s/n"
-
-	read remover_pacotes
-	
-	if [ "$remover_pacotes" = "s" ] 
-	then
-		funcao_remocao_de_pacotes
-	fi
-
-	echo
-	
-	echo "ver informações de pacotes? s/n"
-	
-	read informacoes_de_pacotes
-	
-
-	if [ "$informacoes_de_pacotes" = "s" ]
-	then
-		
-		funcao_informacao_dos_pacotes
-
-	fi	
+    echo
 
 
-	echo
-	
-	echo "Limpar o sistema? s/n"
 
-	read limpar_o_sistema
+    if [ "$limpezas_das_dependencias" = "s" ]
+    then
 
-	echo
-		
-	if [ "$limpar_o_sistema" = "s" ]
-	then
-		funcao_limbezs_no_sistema
-	fi
-			
-	echo
+        if sudo apt-get autoremove -n | grep "0 a serem removidos" > /dev/null 2>&1
+        then  
 
-	echo "Deseja refazer as perguntas? s/n"
+            echo "Não há nada para limpar. O processo será encerrado"
 
-	read repetir_as_perguntas
+        else
 
-	#pergunta para o usuario se quer repetir as perguntas#
-	
-	if test "$repetir_as_perguntas" = "n"
-	then
-	
-		break
+            sudo apt-get autoremove  
 
-	fi
-done
+            echo
+
+            echo "Limpeza de dependências concluída"
+
+        fi
+
+    fi
+
+
+
+    echo "Deseja realizar a limpeza de programas não usados? (s/n)"
+
+    read limpezas_dos_programas  
+
+
+
+    if [ "$limpezas_dos_programas" = "s" ]
+    then
+
+        sudo apt-get autoclean  
+
+        echo
+
+        echo "Se nada aconteceu, o sistema não precisava remover pacotes"
+
+    fi  
+
+
+
+    echo "Deseja realizar a limpeza do cache? (s/n)"
+
+    read limpeza_do_cache  
+
+
+
+    if [ "$limpeza_do_cache" = "s" ]
+    then
+
+        sudo apt-get clean  
+
+        echo
+
+        echo "Limpeza do cache concluída"
+
+        echo
+
+    fi
+
+
+
+    echo "Processo de limpeza terminado"
+}
