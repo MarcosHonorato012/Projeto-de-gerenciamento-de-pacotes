@@ -10,11 +10,15 @@ contador_dos_processo=0 #Vai realizar cada processo que for adicionado para essa
 
 funcao_informacao_dos_pacotes() {  # Declaração da função de informações
 
+    	
+    contador_do_while_informacoes=1  #Serve para iniciar o loop da informações#
+
     echo "Digite qual pacote deseja verificar as informações:"  # Pergunta ao usuário
+		
 
     read pacote_ver_informacoes  # Lê o nome do pacote
 
-    while [ "$contador_do_while" = "1" ]  # Loop principal
+    while [ "$contador_do_while_informacoes" = "1" ]  # Loop principal
     do
 
         # Verifica se o pacote existe
@@ -110,6 +114,9 @@ funcao_informacao_dos_pacotes() {  # Declaração da função de informações
 
 
 teste_de_pacotes(){ #FUNÇÃO DE INSTALAÇÃO DE PACOTES#
+
+
+
 
  	while [ "$while_do_instalador" = "1" ]; do   #Perguntas para iniciar o processo#
  		echo "Vai quere instalar qual pacote?" #Pergunta para usuario qual pacote instalar#
@@ -248,7 +255,9 @@ atualizar_os_pacotes(){ #FUNÇÃO DE ATUALIZAÇÃO
 	
  funcao_remocao_de_pacotes() {  # FUNÇÃO DE REMOVERA PACOTES#
 
-    while [ "$contador_do_while" = "1" ]; do  # Loop que mantém o processo ativo até o usuário sair
+	contador_da_remocao=1
+
+    while [ "$contador_da_remocao" = "1" ]; do  # Loop que mantém o processo ativo até o usuário sair
 
         echo "Digite o pacote que deseja remover:"  # Solicita o nome do pacote
 
@@ -420,175 +429,90 @@ funcao_limpeza_no_sistema () {  #FUNÇÃO DE LIMPEZA DO CACHE/SISTEMA
 }
 
 
-funcao_informacao_dos_pacotes() {  # FUNÇÃO SOBRE INFORMAÇÃO DE PACOTES#
-
-    echo "Digite qual pacote deseja verificar as informações:"  # Pergunta ao usuário
-
-    read pacote_ver_informacoes  # Lê o nome do pacote
-
-    while [ "$contador_do_while" = "1" ]  # Loop principal
-    do
-
-        # Verifica se o pacote existe
-        if apt-cache show "$pacote_ver_informacoes" > /dev/null 2>&1
-
-        then
-
-            echo "Deseja verificar se o pacote está no sistema? (s/n)"  # Pergunta ao usuário
-
-            read resposta_se_esta_instalado  # Lê resposta
-
-            echo  # Espaço
-
-            # Verifica se usuário quer saber se está instalado
-            if [ "$resposta_se_esta_instalado" = "s" ]
-
-            then
-
-                apt-cache policy "$pacote_ver_informacoes" | grep "Instalado:"  # Mostra status
-
-                echo  # Espaço
-
-            fi
-
-            echo  # Espaço
-
-            echo "Deseja verificar as dependências do pacote? (s/n)"  # Pergunta
-
-            read resposta_dependencia_do_pacote  # Lê resposta
-
-            echo  # Espaço
-
-            # Mostra dependências
-            if [ "$resposta_dependencia_do_pacote" = "s" ]
-
-            then
-
-                apt-cache show "$pacote_ver_informacoes" | grep "Depends:"  # Mostra dependências
-
-                echo  # Espaço
-
-            fi
-
-            echo "Deseja ver o tamanho do pacote? (s/n)"  # Pergunta
-
-            read resposta_tamanho_do_pacote  # Lê resposta
-
-            echo  # Espaço
-
-            # Mostra tamanho do pacote
-            if [ "$resposta_tamanho_do_pacote" = "s" ]
-
-            then
-
-                echo "Tamanho no disco:"  # Explicação
-
-                apt-cache show "$pacote_ver_informacoes" | grep "Installed-Size:"  # Tamanho instalado
-
-                echo  # Espaço
-
-                echo "Tamanho para download:"  # Explicação
-
-                apt show "$pacote_ver_informacoes" | grep "Download-Size:"  # Tamanho download
-
-                echo  # Espaço
-
-            fi
-
-            echo "Quer fazer novamente as perguntas? (s/n)"  # Pergunta final
-
-            read recomeca  # Lê resposta
-
-            # Se usuário digitar "n", sai do loop
-            [ "$recomeca" = "n" ] && break
-
-            echo  # Espaço
-
-            echo "Digite novamente o pacote:"  # Permite novo ciclo
-
-            read pacote_ver_informacoes  # Lê novo pacote
-
-        else
-
-            echo "Erro: nome do pacote inválido. Digite novamente."  # Tratamento de erro
-
-            read pacote_ver_informacoes  # Lê novamente
-
-        fi
-
-    done  # Fim do while
-
-}
 
 echo "Oi, o quê deseja: "
 
 echo
 
 #Nessas perguntas o que o usuario deseja: atualizar, remover, instalar, ver informações e limpar o sistema#
-:
+
 echo "digite 's' para sim e 'n' para não"
 
 echo
 
 while [ "$contador_do_while" = 1 ] #Loop para as perguntas#
 do
-	echo "Atualizar o sistema? s/n"
+	echo "Atualizar o sistema? s/n" 
 
 	read atualizar_o_sistema
 
-	test "$atualizar_o_sistema" = "s" && $(($contador_dos_processo + 1)) #Adiciona mais um para contador dos processo#
-
+	if [ "$atualizar_o_sistema" = "s" ] 
+	then
+		atualizar_os_pacotes
+	fi
+	
 	echo
-
+	
 	echo "Instalar pacotes? s/n"
 
 	read instalar_pacotes
-
-	test "$instalar_pacotes" = "s" && $(($contador_dos_processo + 1)) #Adiciona mais um para contador dos processo#
-
+	
+	if [ "$instalar_pacotes" = "s" ]
+	then 
+		instalacao_de_pacotes
+	fi
 
 	echo
-
+	
 	echo "remover pacotes? s/n"
 
 	read remover_pacotes
-
-	test "$remover_pacotes" = "s" && $(($contador_dos_processo + 1)) #Adiciona mais um para contador dos processo#
-
+	
+	if [ "$remover_pacotes" = "s" ] 
+	then
+		funcao_remocao_de_pacotes
+	fi
 
 	echo
-
+	
 	echo "ver informações de pacotes? s/n"
-
+	
 	read informacoes_de_pacotes
+	
 
-	test "$informacoes_de_pacotes" = "s" && $(($contador_dos_processo + 1)) #Adiciona mais um para contador dos processo#
+	if [ "$informacoes_de_pacotes" = "s" ]
+	then
+		
+		funcao_informacao_dos_pacotes
+
+	fi	
 
 
 	echo
-
+	
 	echo "Limpar o sistema? s/n"
 
 	read limpar_o_sistema
 
-	test "$limpar_o_sistema" = "s" && $(($contador_dos_processo + 1)) #Adiciona mais um para contador dos processo#
-
-
+	echo
+		
+	if [ "$limpar_o_sistema" = "s" ]
+	then
+		funcao_limbezs_no_sistema
+	fi
+			
 	echo
 
 	echo "Deseja refazer as perguntas? s/n"
 
 	read repetir_as_perguntas
 
-	#pergunta para o usuario se quer repetir as perguntas e coloca o valor das váriavel para nada#
-
-	if test "$repetir_as_perguntas" = "s"
-
+	#pergunta para o usuario se quer repetir as perguntas#
+	
+	if test "$repetir_as_perguntas" = "n"
 	then
-		echo "As perguntas vão aparecer novamente"
-		atualizar_o_sistema=''
-		instalar_pacotes=''
-		remover_pacotes=''
-		informacoes_de_pacotes=''
-		limpar_o_sistema=''
-		repetir_as_perguntas=''
+	
+		break
+
+	fi
+done
