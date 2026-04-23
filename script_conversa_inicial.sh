@@ -7,7 +7,6 @@
 #######################################################################################################################################
 contador_do_while=1 #Vai permite que o loop aconteçar para as perguntas para executar os processos de pacotes#
 
-contador_dos_processo=0 #Vai realizar cada processo que for adicionado para essa váriavel#
 
 echo "Oi, o quê deseja: "
 
@@ -25,7 +24,10 @@ do
 
 	read atualizar_o_sistema
 
-	test "$atualizar_o_sistema" = "s" && $(($contador_dos_processo + 1)) #Adiciona mais um para contador dos processo#
+	if [ "$atualizar_o_sistema" = "s" ] 
+	then
+		#Colocar a função
+	fi
 	
 	echo
 	
@@ -33,8 +35,10 @@ do
 
 	read instalar_pacotes
 	
-	test "$instalar_pacotes" = "s" && $(($contador_dos_processo + 1)) #Adiciona mais um para contador dos processo#
-
+	if [ "$instalar_pacotes" = "s" ]
+	then 
+		#colocar função
+	fi
 
 	echo
 	
@@ -42,8 +46,10 @@ do
 
 	read remover_pacotes
 	
-	test "$remover_pacotes" = "s" && $(($contador_dos_processo + 1)) #Adiciona mais um para contador dos processo#
-
+	if [ "$remover_pacotes" = "s" ] 
+	then
+			#Colocar a função#
+	fi
 
 	echo
 	
@@ -51,8 +57,7 @@ do
 	
 	read informacoes_de_pacotes
 	
-	test "$informacoes_de_pacotes" = "s" && $(($contador_dos_processo + 1)) #Adiciona mais um para contador dos processo#
-
+		#Colocar a função
 
 	echo
 	
@@ -60,9 +65,13 @@ do
 
 	read limpar_o_sistema
 
-	test "$limpar_o_sistema" = "s" && $(($contador_dos_processo + 1)) #Adiciona mais um para contador dos processo#
-
-
+	echo
+		
+	if [ "$limpar_o_sistema" = "s" ]
+	then
+		#Colocar função"
+	fi
+			
 	echo
 
 	echo "Deseja refazer as perguntas? s/n"
@@ -71,14 +80,10 @@ do
 
 	#pergunta para o usuario se quer repetir as perguntas e coloca o valor das váriavel para nada#
 	
-	if test "$repetir_as_perguntas" = "s"
-
+	if test "$repetir_as_perguntas" = "n"
 	then
-		echo "As perguntas vão aparecer novamente"
-		atualizar_o_sistema=''
-		instalar_pacotes=''
-		remover_pacotes=''
-		informacoes_de_pacotes=''
-		limpar_o_sistema=''
-		repetir_as_perguntas=''	
+	
+		break
 
+	fi
+done
